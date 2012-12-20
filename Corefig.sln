@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFE7202B-78DB-46EE-81CC-8488D2E3CB9D}"
+	ProjectSection(SolutionItems) = preProject
+		Corefig\Common.ps1 = Corefig\Common.ps1
+		Corefig\Computer.ps1 = Corefig\Computer.ps1
+		Corefig\ControlPanel.ps1 = Corefig\ControlPanel.ps1
+		Corefig\Corefig.ps1 = Corefig\Corefig.ps1
+		Corefig\Display.ps1 = Corefig\Display.ps1
+		Corefig\Drivers.ps1 = Corefig\Drivers.ps1
+		Corefig\Firewallsettings.ps1 = Corefig\Firewallsettings.ps1
+		Corefig\hyperV.ps1 = Corefig\hyperV.ps1
+		Corefig\IpSettings.ps1 = Corefig\IpSettings.ps1
+		Corefig\JoinDomainandRename.ps1 = Corefig\JoinDomainandRename.ps1
+		Corefig\Licencing.ps1 = Corefig\Licencing.ps1
+		Corefig\Networking.ps1 = Corefig\Networking.ps1
+		Corefig\Programs.ps1 = Corefig\Programs.ps1
+		Corefig\Proxysettings.ps1 = Corefig\Proxysettings.ps1
+		Corefig\RemoteDesktop.ps1 = Corefig\RemoteDesktop.ps1
+		Corefig\Roles.ps1 = Corefig\Roles.ps1
+		Corefig\Services.ps1 = Corefig\Services.ps1
+		Corefig\Shares.ps1 = Corefig\Shares.ps1
+		Corefig\Start_Corefig.wsf = Corefig\Start_Corefig.wsf
+		Corefig\Updates.ps1 = Corefig\Updates.ps1
+		Corefig\UserAccounts.ps1 = Corefig\UserAccounts.ps1
+		Corefig\WINRM.ps1 = Corefig\WINRM.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "en-US", "en-US", "{816CEE95-5563-436B-BEA7-25FD15A1AE30}"
+	ProjectSection(SolutionItems) = preProject
+		Corefig\en-US\Common.psd1 = Corefig\en-US\Common.psd1
+		Corefig\en-US\Computer.psd1 = Corefig\en-US\Computer.psd1
+		Corefig\en-US\ControlPanel.psd1 = Corefig\en-US\ControlPanel.psd1
+		Corefig\en-US\Corefig.psd1 = Corefig\en-US\Corefig.psd1
+		Corefig\en-US\Display.psd1 = Corefig\en-US\Display.psd1
+		Corefig\en-US\Drivers.psd1 = Corefig\en-US\Drivers.psd1
+		Corefig\en-US\Firewallsettings.psd1 = Corefig\en-US\Firewallsettings.psd1
+		Corefig\en-US\hyperv.psd1 = Corefig\en-US\hyperv.psd1
+		Corefig\en-US\IpSettings.psd1 = Corefig\en-US\IpSettings.psd1
+		Corefig\en-US\JoinDomainAndRename.psd1 = Corefig\en-US\JoinDomainAndRename.psd1
+		Corefig\en-US\Licencing.psd1 = Corefig\en-US\Licencing.psd1
+		Corefig\en-US\Networking.psd1 = Corefig\en-US\Networking.psd1
+		Corefig\en-US\Programs.psd1 = Corefig\en-US\Programs.psd1
+		Corefig\en-US\Proxysettings.psd1 = Corefig\en-US\Proxysettings.psd1
+		Corefig\en-US\RemoteDesktop.psd1 = Corefig\en-US\RemoteDesktop.psd1
+		Corefig\en-US\Roles.psd1 = Corefig\en-US\Roles.psd1
+		Corefig\en-US\Services.psd1 = Corefig\en-US\Services.psd1
+		Corefig\en-US\Shares.psd1 = Corefig\en-US\Shares.psd1
+		Corefig\en-US\Updates.psd1 = Corefig\en-US\Updates.psd1
+		Corefig\en-US\UserAccounts.psd1 = Corefig\en-US\UserAccounts.psd1
+		Corefig\en-US\WINRM.psd1 = Corefig\en-US\WINRM.psd1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 1
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs19
+		SccLocalPath0 = .
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{816CEE95-5563-436B-BEA7-25FD15A1AE30} = {BFE7202B-78DB-46EE-81CC-8488D2E3CB9D}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,34 @@
+﻿# culture=“en-US”
+ConvertFrom-StringData @'
+	PageTitle = Windows Licensing Management Tool
+	PageDescription = Set licensing, activation and KMS options
+	KMSOptions = KMS Options
+	LicenseConfig = License Configuration
+	LicenseInfo = License Information
+	KMSPlaceHolder = KMSServerName
+	KMSDescription = Set name and/or port for KMS computer
+	KMSClear = Clear name of KMS computer
+	ActivationOptions = ActivationOptions
+	UserCID = Activate with user-provided CID
+	ActivateWeb = Activate (Web)
+	KeyConfig = Product Key Configuration
+	KeyClear = Clear product key from registry
+	KeyUninstall = Uninstall product key
+	KeyInstall = Install product key (replaces existing key)
+	LicenseReset = Reset the licensing status of the machine
+	DisplayInstallation = Display installation ID for offline activation
+	LicenseExpiration = Display expiration date for current license state
+	LicenseStatus = Display current licensed status
+	Apply = Apply
+	Close = Close
+	OK = OK
+	ClearKeyCompleted = Product key cleared from registry
+	Info = Info
+	Error = Error
+	Rearmed = Windows licensing rearmed
+	InputRequest = Please enter a value
+	EnterKey = Please enter a product key
+	KMSCleared = KMS server name cleared fom registry
+	KMSRequested = Please enter a KMS server name
+	RearmNeedsReboot = "Windows rearmed successfully but a reboot is required\nClick OK to restart
+'@
