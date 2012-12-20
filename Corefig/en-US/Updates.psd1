@@ -1,0 +1,30 @@
+﻿# culture=“en-US”
+ConvertFrom-StringData @'
+	WindowTitle = Windows Updates
+	UpdateSettings = Update Settings
+	ViewHistory = View Update History
+	CheckForUpdates = Check for Updates
+	HistoryDescription = History of successfully installed updates
+	RebootRequired = A reboot is required to install previous updates...
+	InstallUpdates = Install Updates
+	InstallDescription = Install selected updates
+	UpdateDescription = Install updates to enhance your computer's security and stability
+	NoUpdatesWarning = Your computer will be more vulnerable to security threats and performance problems without the latest updates.
+	NeverConnect = Never check for updates (not recommended)
+	AdvancedOptions = Advanced Options...
+	WSUSAddress = Path of your WSUS Server
+	InstallWithWSUS = Install updates using Windows Server Update Services
+	AutoInstall = Install updates using Windows Server Update Services
+	Close = Close
+	AutoInstallDescription = When your computer is online, Windows can automatically check for important updates and install them
+	Apply = Apply
+	LogDefaultToAuto = {0} Windows Update: No Default Setting Found, Setting Default Update to Check Automatically
+	LogCommandExecuted = {0} Command Executed: {1}
+	Information = Information
+	NoUpdates = No updates found!
+	OK = OK
+	Warning = Warning
+	RebootConfirmation = A reboot is required to install updates\nPlease confirm you wish to restart this server
+	RestartNow = Restart Now
+	RestartLater = Restart Later
+'@
