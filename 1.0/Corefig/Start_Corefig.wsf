@@ -306,10 +306,10 @@ Function LaunchCoreConfig()
 		HyperVEnabled = "True"
 	End If
 	'
-	' 12/17/12 ES: Converted original action from "Unrestricted" to "RemoteSigned" and commented out
-	'On Error Resume Next
-	'WshShell.RegWrite"HKLM\Software\Microsoft\Powershell\1\ShellIds\Microsoft.PowerShell\ExecutionPolicy", "RemoteSigned", "REG_SZ"
-	'On Error goto 0
+	' 12/17/12 ES: Converted original action from "Unrestricted" to "RemoteSigned"
+	On Error Resume Next
+	WshShell.RegWrite"HKLM\Software\Microsoft\Powershell\1\ShellIds\Microsoft.PowerShell\ExecutionPolicy", "RemoteSigned", "REG_SZ"
+	On Error goto 0
 	'
 	WshShell.CurrentDirectory = GlobalFolderPath
 	CommandLine = "POWERSHELL -WindowStyle Minimized -File .\Corefig.ps1 -MPIOEnabled " + MPIOEnabled + " -HyperVEnabled " + HyperVEnabled
