@@ -1,0 +1,411 @@
+<?xml version="1.0" standalone="yes" ?>
+'
+' //***************************************************************************
+' // ***** Script Header *****
+' //
+' // File:      Start-Corefig.wsf
+' //
+' // Purpose:   Windows Server 2012 Core/Hyper-V Configurator Setup Script
+' //
+' // Usage:     cscript Start-Corefig.wsf
+' //
+' // Project site: http://corefig.codeplex.com
+' //
+' // Derived from Core Config 2.0 http://coreconfig.codeplex.com
+* //
+' //----------------------------------------------------------------------------
+' //
+' // ***** End Header *****
+' //***************************************************************************
+
+<package>
+<job id="Start-Corefig">
+'
+<resource id="ResID">
+ServerCore
+</resource>
+'
+<?job error="true" debug="false" ?>
+<!--
+-->
+<!--
+-->
+'=====================================================================================
+<script language="VBScript">
+<![CDATA[
+Option Explicit
+On Error Goto 0
+' Create standard Windows Scripting Host objects
+Dim WshShell : Set WshShell		= CreateObject("WScript.Shell")
+Dim WshNetwork : Set WshNetwork	= CreateObject("WScript.Network")
+
+' Create standard Network object values
+Dim strComputerName		: strComputerName  	= WshNetwork.ComputerName	' NetBios ComputerName
+Dim strUserName			: strUserName			= WshNetwork.UserName			' NetBios UserName
+Dim strUserDomain			: strUserDomain		= WshNetwork.UserDomain		' NetBios Domain N
+' Architecture type
+Const HW_NONE				= "None"
+Const HW_X86				= "[x86 - 32 Bit]"
+Const HW_IA64				= "[IA64 - Itanium 64 bit]"
+Const HW_X64				= "[x64 - Extended 64bit]"
+
+'**************************************************************************************************************************************
+'Localization Text
+'**************************************************************************************************************************************
+Dim L_Warning_Menu_Title
+Dim L_Warning_Text
+Dim L_Failure_Gen
+Dim L_Failure_InvalidOS
+Dim L_Failure_InvalidArchitecture
+Dim L_Failure_LaunchApp
+Dim L_Retrieving
+Dim L_Enabling
+Dim L_AlreadyEnabled
+Dim L_ReturnCode
+Dim L_Failure_FeatureInstallTitle
+Dim L_Failure_FeatureInstallRow1
+Dim L_Failure_FeatureInstallRow2
+Dim L_Failure_FeatureInstallRow3
+Dim L_Failure_FeatureInstallAutoRetry
+Dim L_Info_LaunchingCorefig
+
+'-----------------------------------------------------------------------------------------------------------------
+Function SelectLanguage
+	Dim LanguageSelection
+
+	LanguageSelection = GetLocale()
+	Select Case LanguageSelection
+	' NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE
+	'
+	' To add languages, visit: http://msdn.microsoft.com/en-us/library/ms912047%28WinEmbedded.10%29.aspx
+	' Find the Locale ID for the language you are adding and write a Case XXXX trap for it below.
+		Case Else	' 1033/en-US
+			L_Warning_Menu_Title = "Install .Net 2.0 and Powershell"
+			L_Warning_Text =  "======================================"& vbCrLf & _
+				"This system (" & strComputerName & ")" & vbCrLf &  vbCrLf   & _
+				"needs the .Net 4 and Windows PowerShell features" & vbCrLf  & _
+				"in order for Corefig to function. If you continue," & vbCrLf &_
+				"these features will be automatically installed." & vbCrLf &_
+				"======================================" & vbCrLf &_
+				"Are you sure you wish to continue?" & vbCrLf  & _
+				"======================================"& vbCrLf & ""
+			L_Failure_Gen = "Failure"
+			L_Failure_InvalidOS = "FAILURE: Invalid Operating System Level" & vbCrlf & _
+				" INFO: This script is intended for Server Core Installations Only"
+			L_Failure_InvalidArchitecture = "FAILURE: Invalid Architecture Type!" & vbCrlf & _
+				" INFO: This script is intended to be run under x64 Context Only"
+			L_ReturnCode = "Return Code"
+			L_Retrieving = "Retrieving the status of Windows features..."
+			L_Enabling = "Enabling feature (this may take some time): "
+			L_AlreadyEnabled = "Feature is already enabled"
+			L_Failure_LaunchApp = "Failed to launch Corefig.PS1"
+			L_Failure_FeatureInstallTitle = "Failed to Enable Feature"
+			L_Failure_FeatureInstallRow1 = "Error Enabling Feature!"
+			L_Failure_FeatureInstallRow2 = "Feature Name: "
+			L_Failure_FeatureInstallRow3 = "Return Code: "
+			L_Failure_FeatureInstallAutoRetry = "Feature failed to install. Attempting again with automatic dependency install..."
+			L_Info_LaunchingCorefig = "Launching Corefig..."
+	End Select
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function WriteHost(ByVal Str)
+'======================
+	WScript.Echo Str
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function GetAllWindowsFeatures()
+'========================
+	Dim oExec
+	'
+	Call WriteHost(L_Retrieving)
+	Set oExec = WshShell.Exec("DISM.EXE /Online /Get-Features /Format:table")
+	DISMContents = oExec.StdOut.ReadAll()
+	Set oExec = Nothing
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function IsSpecificWindowsFeatureEnabled(ByVal FeatureName)
+'========================
+	Dim FeatureNameRegEx
+	'
+	IsSpecificWindowsFeatureEnabled = False
+	If IsEmpty(DISMContents) Then Call(GetAllWindowsFeatures)
+	Set FeatureNameRegEx = New RegExp
+	FeatureNameRegEx.Pattern = "\b" + FeatureName + "\b[ \t]*\|[ \t]*Enabled"
+	If FeatureNameRegEx.Test(DISMContents) Then
+		IsSpecificWindowsFeatureEnabled = True
+	End If
+	Set FeatureNameRegEx = Nothing
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function EnableWindowsFeature(ByVal FeatureName)
+'================================
+	Dim iRetCode
+	Dim jRetCode
+	Dim oExec
+	'
+	EnableWindowsFeature = False
+	WriteHost(L_Enabling + " (" + FeatureName + ")...")
+	Set oExec = WshShell.Exec("DISM.EXE /Online /Enable-Feature /All /FeatureName:" + FeatureName)
+	Do While oExec.Status = 0
+		Call WScript.Sleep(100)
+	Loop
+	iRetCode = oExec.ExitCode
+	If iRetCode <> 0 Then
+		Call WriteHost(L_Failure_Gen & " -- " & L_ReturnCode & ": " & iRetCode)
+		Call MsgBox (L_Failure_FeatureInstallRow1 & vbCrLf & L_Failure_FeatureInstallRow2 & FeatureName & vbCrLf & L_Failure_FeatureInstallRow3 & iRetCode, vbCritical, L_Failure_FeatureInstallTitle)
+	Else
+		EnableWindowsFeature = True
+	End If
+	Set oExec = Nothing
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function ValidateWindowsFeature(ByVal FeatureName)
+'================================
+	Dim RetVal
+
+	ValidateWindowsFeature = False
+	If IsSpecificWindowsFeatureEnabled(FeatureName) Then
+		Call WriteHost (L_AlreadyEnabled + " (" + FeatureName + ")")
+				ValidateWindowsFeature = True
+	Else
+		If Not WarningDisplayed Then
+			RetVal = MsgBox(L_Warning_Text, (vbQuestion + vbYesNo), L_Warning_Menu_Title)
+			WarningDisplayed = True
+		Else
+			RetVal = vbYes
+		End If
+		If (RetVal = vbYes) Then
+			If EnableWindowsFeature(FeatureName) Then
+				ValidateWindowsFeature = True
+			End If
+		End If
+	End If
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function CheckVendor()
+'=====================
+	Dim objWMIService
+	Dim colSettings
+	Dim objComputer
+	'
+	CheckVendor = False
+	'
+	ComputerModel = ""
+	'
+	Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\root\cimv2")
+	Set colSettings = objWMIService.ExecQuery ("Select Model, Manufacturer from Win32_ComputerSystem")
+	For Each objComputer In colSettings
+		ComputerModel = Trim(objComputer.Model)
+		ComputerManufacturer = Trim(objComputer.Manufacturer)
+	Next
+	Set colSettings = Nothing
+	Set objWMIService = Nothing
+	CheckVendor = True
+End Function
+
+'-----------------------------------------------------------------------------------------------------------------
+Function DefineArchitecture()
+'**********************
+	Dim StrTemp1
+	Dim StrTemp2
+	'
+	DefineArchitecture = False
+	'
+	strTemp1 = WshShell.ExpandEnvironmentStrings("%PROCESSOR_ARCHITECTURE%")
+	strTemp2 = WshShell.ExpandEnvironmentStrings("%PROCESSOR_ARCHITEW6432%")
+	'
+	Select Case UCase(StrTemp1)
+		Case "X86"
+			GlobalArchitecture = HW_X86
+			If StrComp (strTemp2, "AMD64", vbTextCompare)=0 Then
+				GlobalArchitectureIsX86under64Bit = True
+			Else
+				GlobalArchitectureIsX86under64Bit = False
+			End If
+		Case "X64"
+			GlobalArchitectureIsX86under64Bit = False
+			GlobalArchitecture = HW_X64
+			DefineArchitecture = True
+		Case "AMD64"
+			GlobalArchitectureIsX86under64Bit = False
+			GlobalArchitecture = HW_X64
+			DefineArchitecture = True
+		Case "IA64"
+			GlobalArchitectureIsX86under64Bit = False
+			GlobalArchitecture = IA64
+	End Select
+End Function
+'-----------------------------------------------------------------------------------------------------------------
+
+'-----------------------------------------------------------------------------------------------------------------
+Function CheckOSVersion()
+'========================
+	Dim OpSysSet
+	Dim OpSys
+	Dim Str
+	Dim OSLevel
+	Dim bOSType : bOSType = False
+	'
+	CheckOSVersion = False
+	'
+	OSLevel = -1
+	'
+	Set OpSysSet = GetObject("winmgmts:").ExecQuery("select * from Win32_OperatingSystem where Primary=true")
+	'
+	For Each OpSys In OpSysSet
+		Select Case OpSys.OperatingSystemSKU
+			Case "12"
+				OSType = OpSys.OperatingSystemSKU
+				OSDisplay  = "Core Edition"
+				bOSType = True
+			Case "13"
+				OSType = OpSys.OperatingSystemSKU
+				OSDisplay  = "Core Edition"
+				bOSType = True
+			Case "14"
+				OSType = OpSys.OperatingSystemSKU
+				OSDisplay  = "Core Edition"
+				bOSType = True
+			Case "18"
+				OSType = OpSys.OperatingSystemSKU
+				OSDisplay  = "Core Edition"
+				bOSType = True
+			Case Else
+				OSType = OpSys.OperatingSystemSKU
+		End Select
+		'
+		If IsNull (OpSys.CSDVersion) Then
+			CSDVersion="No Service Pack"
+		Else
+			CSDVersion=OpSys.CSDVersion
+		End If
+		OSLevel = OpSys.ServicePackMajorVersion
+		OSName = OpSys.Caption
+		OSbuild = OpSys.BuildNumber
+		OSType = OpSys.OSType
+	Next
+	'
+	If InStr (1, OSName, "Server 2008", vbTextCompare)< 0 Or _
+		OSLevel <>1 Or Not (bOSType) Then
+		'Failure
+	Else
+		CheckOSVersion = True
+		'OK
+	End If
+	'
+	Set OpSys = Nothing
+	Set OpSysSet = Nothing
+End Function
+'-----------------------------------------------------------------------------------------------------------------
+Function LaunchCorefig()
+'========================
+	Dim iRetCode
+	Dim Temp
+	Dim HyperVEnabled : HyperVEnabled = "False"
+	Dim MPIOEnabled : MPIOEnabled = "False"
+	Dim CommandLine
+
+	'
+	LaunchCorefig = False
+	'
+	If IsSpecificWindowsFeatureEnabled("MultipathIo") Then
+		MPIOEnabled = "True"
+	End If
+	'
+	If IsSpecificWindowsFeatureEnabled("Microsoft-Hyper-V") Then
+		HyperVEnabled = "True"
+	End If
+	'
+	On Error Resume Next
+	WshShell.RegWrite"HKLM\Software\Microsoft\Powershell\1\ShellIds\Microsoft.PowerShell\ExecutionPolicy", "RemoteSigned", "REG_SZ"
+	On Error goto 0
+	'
+	WshShell.CurrentDirectory = GlobalFolderPath
+	CommandLine = "POWERSHELL -WindowStyle Minimized -File .\Corefig.ps1 -MPIOEnabled " + MPIOEnabled + " -HyperVEnabled " + HyperVEnabled
+	iRetCode = WshShell.Run (CommandLine, 1, True)
+	If iRetCode <> 0 Then
+		WriteHost("Error: During launch of Corefig! ReturnCode:"  & iRetCode)
+		Call WshShell.Popup("Error: During launch of Corefig! ReturnCode:" & iRetCode,0,"Error", 16)
+	Else
+ 		'Okay
+		LaunchCorefig = True
+	End If
+End Function
+'-----------------------------------------------------------------------------------------------------------------
+' Function Main()
+Dim GlobalCanContinue : GlobalCanContinue = True
+Dim GlobalArchitecture : GlobalArchitecture = HW_NONE
+Dim GlobalArchitectureIsX86under64bit : GlobalArchitectureIsX86under64bit=False
+Dim GlobalFolderPath :     GlobalFolderPath     = Left (WScript.ScriptFullName, Len (WScript.ScriptFullName) - Len (WScript.ScriptName) - 1)
+Dim GlobalScriptName :     GlobalScriptName     = WScript.ScriptFullName
+Dim GlobalScriptFileName : GlobalScriptFileName = WScript.ScriptName
+Dim strStartExe
+Dim ComputerModel
+Dim ComputerManufacturer
+Dim OSName
+Dim OSbuild
+Dim OSType
+Dim OSDisplay
+Dim CSDVersion
+Dim DISMContents
+Dim WarningDisplayed : WarningDisplayed = False
+'
+strStartExe = UCase( Mid( WScript.fullname, InStrRev(WScript.fullname, "\") + 1 ) )
+
+If Not strStartExe = "CSCRIPT.EXE" Then
+	Call WshShell.Run ("cscript.exe """ & GlobalScriptName & """")
+	WScript.quit
+End If
+'
+Call SelectLanguage()
+Call CheckVendor()
+Call WriteHost ("Manufacturer : " & ComputerManufacturer)
+Call WriteHost ("ComputerModel: " & ComputerModel)
+Call DefineArchitecture()
+Call WriteHost ("ScriptContext: " & GlobalArchitecture)
+Call CheckOSVersion()
+Call WriteHost ("OSSku: " & OSType)
+Call WriteHost ("OSName: " & OSName)
+Call WriteHost ("OSType: " & OSType)
+Call WriteHost ("OSDisplay: " & OSDisplay)
+Call WriteHost ("CSDVersion: " & CSDVersion)
+
+If GlobalCanContinue Then
+	If Not (DefineArchitecture()) Then
+	Call WshShell.Popup(L_Failure_InvalidArchitecture , 0, L_Failure_Gen & GlobalArchitecture, 16)
+		GlobalCanContinue = False
+	End If
+End If
+
+If GlobalCanContinue Then
+	If Not ValidateWindowsFeature("NetFx4") Then
+		GlobalCanContinue = False
+	End If
+End If
+
+If GlobalCanContinue Then
+	If Not ValidateWindowsFeature("MicrosoftWindowsPowerShell") Then
+		GlobalCanContinue = False
+	End If
+End If
+
+If GlobalCanContinue Then
+	WriteHost(L_Info_LaunchingCorefig)
+	If Not LaunchCorefig() Then
+		Call WriteHost (L_Failure_LaunchApp)
+	End If
+End If
+
+]]>
+</script>
+</job>
+</package>
+'
+' EOF
+'
