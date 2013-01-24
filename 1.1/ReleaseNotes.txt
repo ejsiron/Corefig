@@ -1,0 +1,23 @@
+1.1
+
+Fixes:
+* Launch at startup works as expected. Now sets the directory as the location that the script exists in, not the directory it was called from. Also uses correct script file name. If the box was checked from a previous version, it will be necessary to uncheck and recheck it to apply the corrected value.
+* Feature checks and installation in Start_Corefig.PS1 work properly (at least for en-US) and errors are presented in a message box.
+* Detection of Hyper-V and MPIO is more consistent and reliable (again, at least for en-US).
+* Minor improvements to localization structure.
+* Lockups will no longer occur when Roles/Features are enabled/disabled that would cause problems in a dependency tree. These features will enable parents as necessary or gracefully fail to enable/disable.
+* Eliminated localization collisions caused by script interplay.
+* If SMB Direct is not enabled, it is no longer possible to attempt to set its non-existent firewall rule.
+* Ability to rename a network adapter is no longer tied quite so closely to the fate of IP operations.
+* IP and DNS change operations are much more stable and reliable.
+* No longer possible to add duplicate DNS entries.
+* Log entries are now stamped at the time of occurrence, not the time that the script was initiated.
+
+Enhancements:
+* ReleaseNotes.txt added to distribution.
+* Roles/Features module rebuilt to use new PowerShell DISM commands instead of directly invoking DISM.
+* Log file is saved to C:\ProgramData\Corefig (or \Corefig at the location that %allusersprofile% resolves to)
+* Browse dialog box for "Add Programs" adds .MSU (Microsoft patch files) and *.* to its filters.
+* Using the "Add..." button on the DNS Options screen no longer obscures DNS server list.
+* Now possible to call the scripts from other directories.
+* Renaming a virtual adapter operates on the VMNetworkAdapter object instead of the NetAdapter object.
