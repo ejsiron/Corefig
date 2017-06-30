@@ -1,0 +1,39 @@
+<div class="wikidoc">
+<h1>Overview</h1>
+<p>This is a group of PowerShell scripts that provide a minimal graphical interface intended to aid in common configuration tasks for Microsoft Hyper-V Server 2012 and the Core editions of Microsoft Windows Server 2012. It is built directly from the scripts
+ in Core Config 2.0, but it is being worked on by a completely different team.</p>
+<h1>Tested Compatibility</h1>
+<ul>
+<li>Verified: Microsoft Windows Server 2012 (Core Installation) </li><li>Verified: Microsoft Windows Server 2012 (Complete GUI Installation) </li><li>Verified: Microsoft Hyper-V Server 2012 </li><li>Not verified but should function: Microsoft Windows Server 2012 (Minimal Server Interface Installation)
+</li><li>Verified to be partially functional: Microsoft Windows 8 Professional </li><li>Verified to be partially functional (not recommended for this or any other Windows version prior to 8 and 2012): Microsoft Windows 7 Enterprise SP1 with Windows Management Framework 3.0
+</li><li>Minimal verification performed: Windows Server 2012 R2 </li></ul>
+<h1>Installation</h1>
+<ol>
+<li>From the Downloads page, acquire the ZIP or ISO distribution </li><li>If you have downloaded the ZIP version, you&nbsp;<strong>must</strong> unblock it using one of the following methods:
+<ol>
+<li>In Windows Explorer, go to Properties of the file, and click the &quot;Unblock&quot; button.
+</li><li>In PowerShell, use the&nbsp;<a href="http://technet.microsoft.com/en-us/library/hh849924.aspx" target="_blank">Unblock-File</a> cmdlet.
+</li></ol>
+</li><li>Create a folder on the root of the target system. Ex: <strong>MD C:\Corefig</strong>
+</li><li>Copy the contents of the ZIP or ISO to the newly created folder. </li></ol>
+<h1>Uninstallation</h1>
+<ol>
+<li>Delete the folder created in step 3 of the installation instructions. </li><li>Delete the &quot;Corefig&quot; folder created under %ALLUSERSPROFILE% (C:\ProgramData on most systems)
+</li><li>If you wish to reverse the PowerShell execution policy set by Corefig, open a PowerShell prompt and run the following:
+<strong>Set-ExecutionPolicy Restricted</strong> (note that other scripts you use may rely on a RemoteSigned or looser policy)
+</li></ol>
+<h1>Operation</h1>
+<p><strong>This tool can only be run from the console of the system to be managed.</strong></p>
+<ol>
+<li>At a command prompt, switch to the folder that you created in step 3 of the installation instructions, ex:
+<strong>CD /D C:\Corefig</strong> </li><li>For the first run, run: <strong>CSCRIPT Start_corefig.wsf</strong> </li><li>You may use the Start_corefig script on each run, but on successive runs you could use the following instead:
+<strong>POWERSHELL .\COREFIG.PS1</strong> </li></ol>
+<h1>Common Problems</h1>
+<ul>
+<li><strong>Restricted Execution Problems </strong>
+<p>The number one most commonly reported problem is with execution errors even when the system execution policy is RemoteSigned or Unrestricted. These errors have
+<strong>always</strong> been sourced to the .PS1 files being marked as Blocked. Please refer to step 2 in the installation directions above. It is easier to unblock the ZIP file and re-extract it than to unblock each individual script file.</p>
+</li></ul>
+<h1>Reporting Issues</h1>
+<p>Please do not use the comments section on this page to report problems, as no one is alerted. Use the&nbsp;<a href="https://corefig.codeplex.com/discussions">Discussions</a> page instead.</p>
+</div><div class="ClearBoth"></div>
