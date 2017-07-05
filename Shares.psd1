@@ -1,4 +1,4 @@
-# culture=“en-US”
+# culture=â€œen-USâ€
 ConvertFrom-StringData @'
 	WindowTitle = Share Management
 	WindowDescription = Network share creation and deletion
