@@ -4,6 +4,14 @@ Building on the foundation provided by the CoreConfig team on Core Configurator 
 
 The application structure remains largely intact from the CoreConfig product but introduces several enhancements and leverages several of the new cmdlets.
 
+## Current Version
+1.1.3
+
+## Packaged Downloads
+The files are pre-packaged as a ZIP and an ISO. *Remember to unblock the files before trying to use them!*
+[ISO](https://github.com/ejsiron/Corefig/blob/master/release-ISO/CoreFig.1.1.3.iso)
+[ZIP](https://github.com/ejsiron/Corefig/blob/master/release-ZIP/CoreFig.1.1.3.zip)
+
 **Features carried forward:**
 * Server renaming and domain joining
 * Role and feature management
