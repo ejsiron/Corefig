@@ -187,7 +187,7 @@ function ServicesTable
 {
 		
 	$TableName = "OS Services"
-	$table = New-Object system.Data.DataTable “ $TableName ”
+	$table = New-Object system.Data.DataTable Â“ $TableName Â”
 		
 	$col1 = New-Object system.Data.DataColumn Service_Name
 	$col2 = New-Object system.Data.DataColumn Status
