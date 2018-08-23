@@ -4,15 +4,12 @@ Building on the foundation provided by the CoreConfig team on Core Configurator 
 
 The application structure remains largely intact from the CoreConfig product but introduces several enhancements and leverages several of the new cmdlets.
 
+# Resizable Branch
+Changing window styles to resizable in order to accommodate screen sizing variances
+WORK STILL IN PROGRESS
+
 ## Current Version
 1.1.3
-
-## Packaged Downloads
-The files are pre-packaged as a ZIP and an ISO. *Remember to unblock the files before trying to use them!*
-
-[ISO](https://github.com/ejsiron/Corefig/raw/master/release-ISO/CoreFig.1.1.3.iso)
-
-[ZIP](https://github.com/ejsiron/Corefig/raw/master/release-ZIP/Corefig.1.1.3.zip)
 
 **Features carried forward:**
 * Server renaming and domain joining
